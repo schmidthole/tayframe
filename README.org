@@ -1,11 +1,61 @@
 #+TITLE: TayFrame
 
-Python based functions for analyzing timeseries financial data. This project was an exercise to see I could perform the
-same common operations on timeseries data as many are used to, while keeping the following goals in mind:
+Python based functions for analyzing timeseries data in the /"ohlc"/ format. The project has the following goals:
 
-+ *No Pandas (or any other major dependency):* Not allowed to use any major frameworks to make life easier.
-+ *Try to avoid any traditional if/for loops:* I wanted to force myself to think differently about how to accomplish
-  the same task within these limitations. This goal resulted in the use of a lot of functional paradigms and list
-  comprehesions (and some ugly looking code).
++ *No Pandas (or any other major dependency):* Not allowed to use any major frameworks or external libraries.
++ *Try to avoid traditional branching/looping constructs:* Forced to use list comprehensions, functional paradigms, etc.
++ *Try to avoid mutable state as much as possible*
 
-*Disclaimer:* No claims that any of the code in this repo is perfomant or correct.
+*Disclaimer:* The functions in this library may not be correct or performant.
+
+* DataFrames
+
+Dataframes are represented as traditional ~list~ objects with each item/row comprised of a ~dict~. Each key/value
+pair with the row represents a single /column/.
+
+A valid timeseries dataframe has the following minimum fields per row:
+
+| Field | Name      |
+|-------+-----------|
+| t     | Timestamp |
+| o     | Open      |
+| h     | High      |
+| l     | Low       |
+| c     | Close     |
+| v     | Volume    |
+
+** Example
+
+#+BEGIN_SRC python
+dataframe = [
+    {'t': 2399485, 'o': 1.0, 'h': 2.0, 'l': 0.8, 'c': 1.5, 'v': 123},
+    {'t': 2399585, 'o': 1.5, 'h': 2.5, 'l': 1.2, 'c': 2.3, 'v': 456},
+    ...
+]
+#+END_SRC
+
+* Indicators
+
+Indicators are functions that are applied over a dataframe to create a new column. These functions typically
+take a dataframe ~list~ as an input (including other parameters) and return a ~list~ as the output. The outputted
+~list~ will contain a single item per element representing the calculated indicator. This new column can then
+be appended/merged into the dataframe using a helper function.
+
+** Example
+
+#+BEGIN_SRC python
+indicator = [5, 6, 7, 8, 9, ...]
+#+END_SRC
+
+** Supported Indicators
+
+A few standard indicators are supported.
+
++ Simple moving average (SMA).
++ Exponential moving average (EMA).
++ Moving average convergnece divergence (MACD).
++ Average True Range (ATR).
++ Close-open Gaps.
++ Relative Strength Indicator (RSI).
++ Close-close percent change.
++ New High.
