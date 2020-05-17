@@ -46,10 +46,17 @@ def append_column(df, col_name, col):
     return [{**cleaned[i], **{col_name, col[i]}} for i in range(len(cleaned))]
 
 
-def df_to_csv(symbol, df, path='.'):
+def df_to_csv(df, path):
+    '''
+    Convert a dataframe to csv format with headers.
+
+    Params:
+      - df (list): input dataframe.
+      - path (str): path string to place file at.
+    '''
     headers = list(df[-1].keys())
 
-    with open(f'{path}/{symbol}.csv', 'w', newline='') as f:
+    with open(path, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(headers)
         [
