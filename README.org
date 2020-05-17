@@ -3,9 +3,9 @@
 Python based functions for analyzing timeseries financial data. This project was an exercise to see I could perform the
 same common operations on timeseries data as many are used to, while keeping the following goals in mind:
 
-+ **No Pandas (or any other major dependency):** Not allowed to use any major frameworks to make life easier.
-+ **Try to avoid any traditional if/for loops:** I wanted to force myself to think differently about how to accomplish
++ *No Pandas (or any other major dependency):* Not allowed to use any major frameworks to make life easier.
++ *Try to avoid any traditional if/for loops:* I wanted to force myself to think differently about how to accomplish
   the same task within these limitations. This goal resulted in the use of a lot of functional paradigms and list
   comprehesions (and some ugly looking code).
 
-**Disclaimer:** No claims that any of the code in this repo is perfomant or correct.
+*Disclaimer:* No claims that any of the code in this repo is perfomant or correct.
