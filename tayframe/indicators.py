@@ -65,18 +65,18 @@ def macd(df, slow, fast, signal):
     Returns:
       - (list): timeseries list corresponding to the macd histogram.
     '''
-    def calc_macd_line(slowema, fastema):
+    def calc_macd_line(slow, fast):
         return [
-            round(fastema[i] - slowema[i], 2)
-            for i in range(len(slowema))
+            round(fast[i] - slow[i], 2)
+            for i in range(len(slow))
         ]
 
     def calc_signal(index, line, signal, mult):
-        next_sig = ((line[index]['macd'] - signal[-1]) * mult) + signal[-1]
+        next_sig = ((line[index] - signal[-1]) * mult) + signal[-1]
         return round(next_sig, 2)
 
-    slowema = ema(df, slow)
-    fastema = ema(df, fast)[-1 * len(slowema):]
+    slowema = ema(df, 'c', slow)
+    fastema = ema(df, 'c', fast)[-1 * len(slowema):]
     macd_line = calc_macd_line(slowema, fastema)
     multiplier = (2.0 / (signal + 1))
 
@@ -119,7 +119,7 @@ def atr(df, lag, normalize=False):
         return avg
 
     tr = [
-        _true_range(df[i: i + 2], normalize)
+        _true_range(df[i: i + 2])
         for i in range(len(df) - 1)
     ]
     return [
@@ -140,7 +140,7 @@ def gaps(df):
     '''
     return [
         (round(df[i]['o'] - df[i - 1]['c'], 2))
-        for i in range(1, len(df) - 1)
+        for i in range(1, len(df))
     ]
 
 
@@ -234,4 +234,34 @@ def new_high(df):
     return [
         _is_high(df[:i + 1])
         for i in range(len(df))
+    ]
+
+
+def frequency(df, keys, lag):
+    '''
+    Frequency of occurence. Finds the frequency a set of keys are True for the
+    given lag window.
+
+    NOTE: this function takes a list of keys to calculate over. Each column name
+          provided MUST only contain the values True or False.
+
+    Params:
+      - df (list): input dataframe.
+      - keys (list): list of keys to include in the frequency calc.
+      - lag (int): lag window.
+
+    Returns:
+      - (list) timeseries including freq count for rolling window.
+    '''
+    def _freq(window):
+        values = [
+            [d[k] for d in window]
+            for k in keys
+        ]
+        frequencies = list(map(lambda v: v.count(True), values))
+        return sum(frequencies)
+
+    return [
+        _freq(df[i: i + 31])
+        for i in range(len(df) - 30)
     ]

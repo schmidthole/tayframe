@@ -19,13 +19,13 @@ def check(df):
     def _check_row(r):
         return isinstance(r, dict) and\
             ('t' in r) and\
-            (('o') in r) and\
-            (('h') in r) and\
-            (('l') in r) and\
-            (('c') in r) and\
-            (('v') in r)
+            ('o' in r) and\
+            ('h' in r) and\
+            ('l' in r) and\
+            ('c' in r) and\
+            ('v' in r)
 
-    return isinstance(df, dict) and\
+    return isinstance(df, list) and\
         not ('False' in [_check_row(r) for r in df])
 
 
@@ -42,8 +42,21 @@ def append_column(df, col_name, col):
       - (list): new dataframe list with column appended.
     '''
     # ensure the dataframe fits the new col size
-    cleaned = df[-1 * len(col):]
-    return [{**cleaned[i], **{col_name, col[i]}} for i in range(len(cleaned))]
+    padded = ([None] * (len(df) - len(col))) + col
+    return [{**df[i], **{col_name: padded[i]}} for i in range(len(df))]
+
+
+def clean(df):
+    '''
+    Clean out any rows containing None in any column.
+
+    Params:
+      - df (list): input dataframe.
+
+    Returns:
+      - (list): df with all None columns removed.
+    '''
+    return list(filter(lambda r: None not in r.values(), df))
 
 
 def df_to_csv(df, path):
@@ -63,3 +76,11 @@ def df_to_csv(df, path):
             writer.writerow([row[h] if h in row else '' for h in headers])
             for row in df
         ]
+
+
+def alpaca_to_df(symbol, obj):
+    raw = obj[symbol]
+    if check(raw):
+        return raw
+    else:
+        return None
