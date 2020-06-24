@@ -1,6 +1,6 @@
 #+TITLE: TayFrame
 
-Python based functions for analyzing timeseries data in the /"ohlc"/ format. The project has the following goals:
+Python based functions for analyzing timeseries data in the "ohlc" format. The project has the following goals:
 
 + *No Pandas (or any other major dependency):* Not allowed to use any major frameworks or external libraries.
 + *Try to avoid traditional branching/looping constructs:* Forced to use list comprehensions, functional paradigms, etc.
